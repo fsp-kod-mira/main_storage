@@ -243,3 +243,5 @@ def DeleteTemplate(template_id):
             session.commit()
         else:
             raise ModelException("Не найдена структура")
+
+

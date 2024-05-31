@@ -1,6 +1,7 @@
 import grpc
 import templates_pb2
 import templates_pb2_grpc
+from grpc_reflection.v1alpha import reflection
 from concurrent import futures
 import model
 
@@ -18,7 +19,7 @@ class TemplatesServicer(templates_pb2_grpc.TemplatesServicer):
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(str(e))
             return templates_pb2.IdStruct()
-            
+
 
     def CreateLink(self, request, context):
         try:
@@ -109,13 +110,16 @@ class TemplatesServicer(templates_pb2_grpc.TemplatesServicer):
 
 
 
-
-
-
 def serve():
     try:
         server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
         templates_pb2_grpc.add_TemplatesServicer_to_server(TemplatesServicer(), server)
+        SERVICE_NAMES = (
+            templates_pb2.DESCRIPTOR.services_by_name['Templates'].full_name,
+            reflection.SERVICE_NAME,
+        )
+
+        reflection.enable_server_reflection(SERVICE_NAMES, server)
         server.add_insecure_port(grpc_port)
         server.start()
         server.wait_for_termination()
