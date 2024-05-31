@@ -41,7 +41,7 @@ class TemplatesServicer(templates_pb2_grpc.TemplatesServicer):
             id = model.AddFeatureTemplateLink(request.feature_id, request.template_id)
             return templates_pb2.IdStruct(id=id)
         except Exception as e:
-            print("Error in CreateLink:", e)
+            logger.error("Error in CreateLink:", e)
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(str(e))
             return templates_pb2.IdStruct()
@@ -64,7 +64,7 @@ class TemplatesServicer(templates_pb2_grpc.TemplatesServicer):
 
             return ret_templates
         except Exception as e:
-            print("Error in GetAllTemplates:", e)
+            logger.error("Error in GetAllTemplates:", e)
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(str(e))
             return templates_pb2.TemplatesList()
@@ -78,18 +78,16 @@ class TemplatesServicer(templates_pb2_grpc.TemplatesServicer):
         try:
             ret_features = templates_pb2.FeaturesList()
             templates_result = model.GetFeaturesByTemplateId(request.id)
-            print(templates_result)
-
+            
             for feature in templates_result:
-                print(feature)
-
+            
                 temp_struct = templates_pb2.FeatureStruct(id=feature["id"], name=feature["name"])
                 
                 ret_features.items.append(temp_struct)
 
             return ret_features
         except Exception as e:
-            print("Error in GetFeaturesByTemplateId:", e)
+            logger.error("Error in GetFeaturesByTemplateId:", e)
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(str(e))
             return templates_pb2.FeaturesList()
@@ -101,10 +99,10 @@ class TemplatesServicer(templates_pb2_grpc.TemplatesServicer):
         """
         logger.info("DeleteLink request")
         try:
-            print(request.feature_id)
+            
             model.DeleteFeatureTemplateLink(request.feature_id, request.template_id)
         except Exception as e:
-            print("Error in DeleteLink:", e)
+            logger.error("Error in DeleteLink:", e)
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(str(e))
         
@@ -119,7 +117,7 @@ class TemplatesServicer(templates_pb2_grpc.TemplatesServicer):
         try:
             model.DeleteTemplate(request.id)
         except Exception as e:
-            print("Error in DeleteTemplate:", e)
+            logger.error("Error in DeleteTemplate:", e)
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(str(e))
         
@@ -136,7 +134,7 @@ class TemplatesServicer(templates_pb2_grpc.TemplatesServicer):
             id = model.AddFeature(request.name)
             return templates_pb2.IdStruct(id=id)
         except Exception as e:
-            print("Error in DeleteTemplate:", e)
+            logger.error("Error in DeleteTemplate:", e)
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(str(e))
             return templates_pb2.Empty()    
@@ -162,7 +160,7 @@ def serve():
         server.start()
         server.wait_for_termination()
     except Exception as e:
-        print("Error in server:", e)
+        logger.error("Error in server:", e)
 
 
 if __name__ == "__main__":
