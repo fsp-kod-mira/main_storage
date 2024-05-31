@@ -1,6 +1,9 @@
-sqlalchemy
-psycopg2-binary
-grpcio
-grpcio-tools
-protobuf
-grpc_reflection
+greenlet==3.0.3
+grpcio==1.64.0
+grpcio-reflection==1.64.0
+grpcio-tools==1.64.0
+protobuf==5.27.0
+psycopg2-binary==2.9.9
+setuptools==70.0.0
+SQLAlchemy==2.0.30
+typing_extensions==4.12.0
