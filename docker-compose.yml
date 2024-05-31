@@ -5,3 +5,15 @@ services:
     build: .
     ports:
       - "50051:50051"
+  
+  templates-postgres:
+    image: postgres:13.14-alpine3.19
+    restart: always
+    volumes:
+      - template-pgdata:/var/lib/postgresql/data
+    env_file:
+      - .env.pg
+    ports:
+      - "5437:5432"
+volumes:
+  templates-pgdata:

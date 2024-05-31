@@ -1,1 +1,1 @@
-psql_conn_url = 'postgresql://nlclover:rootNodeJS1243@localhost:5432/fichi'
+psql_conn_url = 'postgresql://postgres:postgres@localhost:5432/fichi'

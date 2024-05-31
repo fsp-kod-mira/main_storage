@@ -5,23 +5,34 @@ from grpc_reflection.v1alpha import reflection
 from concurrent import futures
 import model
 
+import os
 
-grpc_port = '[::]:50051'
+
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
+
+grpc_port = os.environ.get('GRPC_IPPORT')
+if grpc_port == None:
+    grpc_port = '0.0.0.0:50051'
+
 
 class TemplatesServicer(templates_pb2_grpc.TemplatesServicer):
     
     def CreateTemplate(self, request, context):
+        logger.info("CreateTemplate request")
         try:
             id = model.AddTemplate(request.name, request.description)
             return templates_pb2.IdStruct(id=id)
         except Exception as e:
-            print("Error in CreateTemplate:", e)
+            logger.error(f"Error in CreateTemplate: {e}")
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(str(e))
             return templates_pb2.IdStruct()
 
 
     def CreateLink(self, request, context):
+        logger.info("CreateLink request")
         try:
             id = model.AddFeatureTemplateLink(request.feature_id, request.template_id)
             return templates_pb2.IdStruct(id=id)
@@ -34,6 +45,7 @@ class TemplatesServicer(templates_pb2_grpc.TemplatesServicer):
 
 
     def GetAllTemplates(self, request, context):
+        logger.info("GetAllTemplates request")
         try:
             ret_templates = templates_pb2.TemplatesList()
             templates_result = model.GetAllTemplates()
@@ -52,6 +64,7 @@ class TemplatesServicer(templates_pb2_grpc.TemplatesServicer):
 
     
     def GetFeaturesByTemplateId(self, request, context):
+        logger.info("GetFeaturesByTemplateId request")
         try:
             ret_features = templates_pb2.FeaturesList()
             templates_result = model.GetFeaturesByTemplateId(request.id)
@@ -81,6 +94,7 @@ class TemplatesServicer(templates_pb2_grpc.TemplatesServicer):
 
 
     def DeleteLink(self, request, context):
+        logger.info("DeleteLink request")
         try:
             print(request.feature_id)
             model.DeleteFeatureTemplateLink(request.feature_id, request.template_id)
@@ -94,6 +108,7 @@ class TemplatesServicer(templates_pb2_grpc.TemplatesServicer):
 
 
     def DeleteTemplate(self, request, context):
+        logger.info("DeleteTemplate request")
         try:
             model.DeleteTemplate(request.id)
         except Exception as e:
