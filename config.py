@@ -1,1 +1,0 @@
-psql_conn_url = 'postgresql://postgres:postgres@localhost:5432/fichi'

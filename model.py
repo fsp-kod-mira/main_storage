@@ -1,9 +1,10 @@
 from sqlalchemy import create_engine, Column, Integer, String, Float, ForeignKey
 from sqlalchemy.orm import relationship, declarative_base
-from config import *
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy.exc import IntegrityError
+import os
 
+psql_conn_url = os.getenv('PSQL_URL') or 'postgresql://nlclover:rootNodeJS1243@localhost:5432/fichi'
 
 Base = declarative_base()
 engine = create_engine(psql_conn_url)
@@ -19,10 +20,7 @@ class Feature(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(255), nullable=False, unique=True)   
-    priority_id = Column(Integer, ForeignKey('priorities.id'), nullable=False)
 
-    # Отношение многие-к-одному с таблицей Priority
-    priorities = relationship("Priority", back_populates="feature")
     # Отношение многие-ко-многим с таблицей Template через таблицу FeaturesTemplates
     templates = relationship("FeaturesTemplates", back_populates="feature")
 
@@ -42,6 +40,7 @@ class Template(Base):
     features = relationship("FeaturesTemplates", back_populates="template")
 
 
+
 class FeaturesTemplates(Base):
     """
     Модель таблицы features_templates.
@@ -59,18 +58,6 @@ class FeaturesTemplates(Base):
     template = relationship("Template", back_populates="features")
 
 
-class Priority(Base):
-    """
-    Модель таблицы priorities.
-    Представляет собой приоритет, который связан с несколькими функциональностями.
-    """
-    __tablename__ = 'priorities'
-
-    id = Column(Integer, primary_key=True, autoincrement=True)  
-    name = Column(String(255), nullable=False)
-
-    # Отношение один-ко-многим с таблицей Feature
-    feature = relationship("Feature", back_populates="priorities")
 
 
 def CreateTables():
@@ -80,7 +67,7 @@ def GetSession():
     Session = sessionmaker(bind=engine)
     return Session()
 
-CreateTables()
+
 
 
 
@@ -88,7 +75,19 @@ class ModelException(Exception):
     pass
 
 
-
+def AddFeature(name):
+    """
+    Добавление новой фичи
+    """
+    with GetSession() as session:
+        try:
+            feature = Feature(name=name)
+            session.add(feature)
+            session.commit()
+            return feature.id
+        except IntegrityError:
+            session.rollback()
+            return None
 
 
 def AddTemplate(name, description=None):
@@ -105,6 +104,7 @@ def AddTemplate(name, description=None):
             session.rollback()
             return None
         
+
 
 def AddFeatureTemplateLink(feature_id, template_id):
     """
@@ -127,10 +127,6 @@ def AddFeatureTemplateLink(feature_id, template_id):
         
 
 
-
-
-
-
 def UpdateTemplateFeaturesLink(link_id, template_id, feature_id):
     """
     Обновление связи между шаблоном и фичей
@@ -145,6 +141,7 @@ def UpdateTemplateFeaturesLink(link_id, template_id, feature_id):
             raise ModelException("Не найдена структура")
 
 
+
 def UpdateTemplate(template_id, name, description):
     """
     Обновление шаблона
@@ -157,10 +154,6 @@ def UpdateTemplate(template_id, name, description):
             session.commit()
         else:
             raise ModelException("Не найдена структура")
-
-
-
-
 
 
 
@@ -182,9 +175,6 @@ def GetAllTemplates():
 
 
 
-
-
-
 def GetFeaturesByTemplateId(template_id):
     """
     Получение всех функциональностей по идентификатору шаблона.
@@ -200,21 +190,9 @@ def GetFeaturesByTemplateId(template_id):
                 feature_dict = {
                     "id": feature.id,
                     "name": feature.name,
-                    "priority_id": feature.priority_id
                 }
                 features_dicts.append(feature_dict)
         return features_dicts
-
-        
-
-
-
-
-
-
-
-
-
 
 
 
@@ -245,3 +223,8 @@ def DeleteTemplate(template_id):
             raise ModelException("Не найдена структура")
 
 
+
+
+
+# Создание таблиц
+CreateTables()
