@@ -15,6 +15,14 @@ grpc_port = os.environ.get('GRPC_IPPORT') or '0.0.0.0:50051'
 
 
 
+def print_exception_details(e, context):
+    logger.error(f"Error: {e}")
+    logger.exceprion(e)
+    context.set_code(grpc.StatusCode.INTERNAL)
+    context.set_details(str(e))
+
+
+
 class TemplatesServicer(templates_pb2_grpc.TemplatesServicer):
     
     def CreateTemplate(self, request, context):
@@ -23,28 +31,42 @@ class TemplatesServicer(templates_pb2_grpc.TemplatesServicer):
         """
         logger.info("CreateTemplate request")
         try:
-            id = model.AddTemplate(request.name, request.description)
+            id = model.CreateTemplate(request.name, request.description)
             return templates_pb2.IdStruct(id=id)
         except Exception as e:
-            logger.error(f"Error in CreateTemplate: {e}")
-            context.set_code(grpc.StatusCode.INTERNAL)
-            context.set_details(str(e))
+            print_exception_details(e, context)
             return templates_pb2.IdStruct()
 
 
-    def CreateLink(self, request, context):
+
+    def UpdateTemplate(self, request, context):
         """
-        Создание связи между таблицами
+        Обновление шаблонов
         """
-        logger.info("CreateLink request")
+        logger.info("UpdateTemplate request")
         try:
-            id = model.AddFeatureTemplateLink(request.feature_id, request.template_id)
-            return templates_pb2.IdStruct(id=id)
+            model.UpdateTemplate(request.name, request.description, request.id)
+            
         except Exception as e:
-            logger.error("Error in CreateLink:", e)
-            context.set_code(grpc.StatusCode.INTERNAL)
-            context.set_details(str(e))
-            return templates_pb2.IdStruct()
+            print_exception_details(e, context)
+        
+        return templates_pb2.Empty()
+
+
+
+    def DeleteTemplate(self, request, context):
+        """
+        Удалить шаблон
+        """
+        logger.info("DeleteTemplate request")
+        try:
+            model.DeleteTemplate(request.id)
+        except Exception as e:
+            print_exception_details(e, context)
+        
+        return templates_pb2.Empty()
+
+
 
 
     def GetAllTemplates(self, request, context):
@@ -57,17 +79,123 @@ class TemplatesServicer(templates_pb2_grpc.TemplatesServicer):
             templates_result = model.GetAllTemplates()
 
             for template in templates_result:
-                temp_struct = templates_pb2.TemplateStruct(id=template["id"],
-                    name=template["name"], 
-                    description=template["description"])
+                temp_struct = templates_pb2.TemplateStruct(
+                    id=template["id"],
+                    name = template["name"], 
+                    description = template["description"])
                 ret_templates.items.append(temp_struct)
-
             return ret_templates
+        
         except Exception as e:
-            logger.error("Error in GetAllTemplates:", e)
-            context.set_code(grpc.StatusCode.INTERNAL)
-            context.set_details(str(e))
-            return templates_pb2.TemplatesList()
+            print_exception_details(e, context)
+        
+        return templates_pb2.TemplatesList()
+        
+
+
+
+
+
+
+
+
+
+
+
+
+    def CreateLink(self, request, context):
+        """
+        Создание связи между таблицами
+        """
+        logger.info("CreateLink request")
+        try:
+            id = model.AddFeatureTemplateLink(request.feature_id, request.template_id)
+            return templates_pb2.IdStruct(id=id)
+        except Exception as e:
+            print_exception_details(e, context)
+
+        return templates_pb2.IdStruct(id=-1)
+
+
+    
+    def DeleteLink(self, request, context):
+        """
+        Удалить связь между таблицами
+        """
+        logger.info("DeleteLink request")
+        try:
+            
+            model.DeleteFeatureTemplateLink(request.feature_id, request.template_id)
+        except Exception as e:
+            print_exception_details(e, context)
+        
+        return templates_pb2.Empty(id=-1)
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    def CreateFeature(self, request, context):
+        """
+        Создание фичи
+        """
+        logger.info("CreateFeature request")
+
+        try:
+            id = model.CreateFeature(request.name)
+            return templates_pb2.IdStruct(id=id)
+        except Exception as e:
+            print_exception_details(e, context)
+        
+        return templates_pb2.Empty()    
+
+
+    
+    def UpdateFeature(self, request, context):
+        """
+        Обновление фичи
+        """
+        logger.info("UpdateFeature")
+
+        try:
+            model.UpdateFeature(request.id, request.name)
+        except Exception as e:
+            print_exception_details(e, context)
+
+        return templates_pb2.Empty()
+
+
+
+    def DeleteFeature(self, request, context):
+        """
+        Удаление фичи
+        """
+        logger.info("DeleteFeature")
+
+        try:
+            model.DeleteFeature(request.id)
+        except Exception as e:
+            print_exception_details(e, context)
+
+        return templates_pb2.Empty()
+
+
+
+
+
+
+
+
+
 
 
     def GetFeaturesByTemplateId(self, request, context):
@@ -78,66 +206,22 @@ class TemplatesServicer(templates_pb2_grpc.TemplatesServicer):
         try:
             ret_features = templates_pb2.FeaturesList()
             templates_result = model.GetFeaturesByTemplateId(request.id)
-            
             for feature in templates_result:
-            
                 temp_struct = templates_pb2.FeatureStruct(id=feature["id"], name=feature["name"])
-                
                 ret_features.items.append(temp_struct)
-
             return ret_features
+        
         except Exception as e:
-            logger.error("Error in GetFeaturesByTemplateId:", e)
-            context.set_code(grpc.StatusCode.INTERNAL)
-            context.set_details(str(e))
-            return templates_pb2.FeaturesList()
+            print_exception_details(e, context)
+
+        return templates_pb2.FeaturesList()
         
 
-    def DeleteLink(self, request, context):
-        """
-        Удалить связь между таблицами
-        """
-        logger.info("DeleteLink request")
-        try:
-            
-            model.DeleteFeatureTemplateLink(request.feature_id, request.template_id)
-        except Exception as e:
-            logger.error("Error in DeleteLink:", e)
-            context.set_code(grpc.StatusCode.INTERNAL)
-            context.set_details(str(e))
-        
-        return templates_pb2.Empty()
+    
 
 
-    def DeleteTemplate(self, request, context):
-        """
-        Удалить шаблон
-        """
-        logger.info("DeleteTemplate request")
-        try:
-            model.DeleteTemplate(request.id)
-        except Exception as e:
-            logger.error("Error in DeleteTemplate:", e)
-            context.set_code(grpc.StatusCode.INTERNAL)
-            context.set_details(str(e))
-        
-        return templates_pb2.Empty()
+    
 
-
-    def CreateFeature(self, request, context):
-        """
-        Создание фичи
-        """
-        logger.info("CreateFeature request")
-
-        try:
-            id = model.AddFeature(request.name)
-            return templates_pb2.IdStruct(id=id)
-        except Exception as e:
-            logger.error("Error in DeleteTemplate:", e)
-            context.set_code(grpc.StatusCode.INTERNAL)
-            context.set_details(str(e))
-            return templates_pb2.Empty()    
 
 
 

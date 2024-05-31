@@ -6,6 +6,7 @@ import os
 
 psql_conn_url = os.getenv('PSQL_URL') or 'postgresql://nlclover:rootNodeJS1243@localhost:5432/fichi'
 
+
 Base = declarative_base()
 engine = create_engine(psql_conn_url)
 
@@ -75,7 +76,33 @@ class ModelException(Exception):
     pass
 
 
-def AddFeature(name):
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def CreateFeature(name):
     """
     Добавление новой фичи
     """
@@ -90,20 +117,38 @@ def AddFeature(name):
             return None
 
 
-def AddTemplate(name, description=None):
+
+def UpdateFeature(feature_id, name):
     """
-    Добавляет новый шаблон в базу данных и возвращает его id.
+    Обновление фичи
     """
     with GetSession() as session:
         try:
-            template = Template(name=name, description=description)
-            session.add(template)
+            feature = session.query(Feature).filter(Feature.id == feature_id).first()
+            feature.name = name
             session.commit()
-            return template.id
+            return True
         except IntegrityError:
             session.rollback()
-            return None
-        
+            return False
+
+
+def DeleteFeature(feature_id):
+    """
+    Удаление фичи
+    """
+    with GetSession() as session:
+        try:
+            feature = session.query(Feature).filter(Feature.id == feature_id).first()
+            session.delete(feature)
+        except Exception as e:
+            print(e) 
+
+
+
+#========================================================================================================================
+
+
 
 
 def AddFeatureTemplateLink(feature_id, template_id):
@@ -124,7 +169,7 @@ def AddFeatureTemplateLink(feature_id, template_id):
         except IntegrityError:
             session.rollback()
             return None
-        
+
 
 
 def UpdateTemplateFeaturesLink(link_id, template_id, feature_id):
@@ -139,40 +184,6 @@ def UpdateTemplateFeaturesLink(link_id, template_id, feature_id):
             session.commit()
         else:
             raise ModelException("Не найдена структура")
-
-
-
-def UpdateTemplate(template_id, name, description):
-    """
-    Обновление шаблона
-    """
-    with GetSession() as session:
-        res = session.query(Template).filter(Template.id == template_id).first()
-        if res:
-            res.name = name
-            res.description = description
-            session.commit()
-        else:
-            raise ModelException("Не найдена структура")
-
-
-
-def GetAllTemplates():
-    """
-    Получение всех шаблонов
-    """
-    with GetSession() as session:
-        templates = []
-        templates_result = session.query(Template).all()
-        for template in templates_result:
-            template_dict = {
-                "id": template.id,
-                "name": template.name,
-                "description": template.description
-            }
-            templates.append(template_dict)
-        return templates
-
 
 
 def GetFeaturesByTemplateId(template_id):
@@ -201,7 +212,10 @@ def DeleteFeatureTemplateLink(feature_id, template_id):
     Удаляет связь меду функциональностью и шаблоном в базе данных
     """
     with GetSession() as session:
-        res = session.query(FeaturesTemplates).filter(FeaturesTemplates.template_id == template_id, FeaturesTemplates.feature_id == feature_id).first()
+        res = session.query(FeaturesTemplates).filter(
+                FeaturesTemplates.template_id == template_id,
+                FeaturesTemplates.feature_id == feature_id
+            ).first()
         if res:
             session.delete(res)
             session.commit()
@@ -209,6 +223,41 @@ def DeleteFeatureTemplateLink(feature_id, template_id):
             raise ModelException("Не найдена структура")
 
 
+
+#========================================================================================================================
+
+
+
+
+
+def CreateTemplate(name, description=None):
+    """
+    Добавляет новый шаблон в базу данных и возвращает его id.
+    """
+    with GetSession() as session:
+        try:
+            template = Template(name=name, description=description)
+            session.add(template)
+            session.commit()
+            return template.id
+        except IntegrityError:
+            session.rollback()
+            return None
+        
+
+
+def UpdateTemplate(name, description, template_id):
+    """
+    Обновление шаблона
+    """
+    with GetSession() as session:
+        res = session.query(Template).filter(Template.id == template_id).first()
+        if res:
+            res.name = name
+            res.description = description
+            session.commit()
+        else:
+            raise ModelException("Не найдена структура")
 
 def DeleteTemplate(template_id):
     """
@@ -221,6 +270,46 @@ def DeleteTemplate(template_id):
             session.commit()
         else:
             raise ModelException("Не найдена структура")
+        
+
+
+def GetAllTemplates():
+    """
+    Получение всех шаблонов
+    """
+    with GetSession() as session:
+        templates = []
+        templates_result = session.query(Template).all()
+        for template in templates_result:
+            template_dict = {
+                "id": template.id,
+                "name": template.name,
+                "description": template.description
+            }
+            templates.append(template_dict)
+        return templates
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -44,24 +44,39 @@ class TemplatesStub(object):
                 request_serializer=templates__pb2.FeatureLinkTemplateStruct.SerializeToString,
                 response_deserializer=templates__pb2.IdStruct.FromString,
                 _registered_method=True)
+        self.DeleteLink = channel.unary_unary(
+                '/TemplatesService.Templates/DeleteLink',
+                request_serializer=templates__pb2.FeatureLinkTemplateStruct.SerializeToString,
+                response_deserializer=templates__pb2.Empty.FromString,
+                _registered_method=True)
         self.CreateTemplate = channel.unary_unary(
                 '/TemplatesService.Templates/CreateTemplate',
                 request_serializer=templates__pb2.TemplateStruct.SerializeToString,
                 response_deserializer=templates__pb2.IdStruct.FromString,
                 _registered_method=True)
-        self.CreateFeature = channel.unary_unary(
-                '/TemplatesService.Templates/CreateFeature',
-                request_serializer=templates__pb2.FeatureStruct.SerializeToString,
-                response_deserializer=templates__pb2.IdStruct.FromString,
+        self.UpdateTemplate = channel.unary_unary(
+                '/TemplatesService.Templates/UpdateTemplate',
+                request_serializer=templates__pb2.TemplateStruct.SerializeToString,
+                response_deserializer=templates__pb2.Empty.FromString,
                 _registered_method=True)
         self.DeleteTemplate = channel.unary_unary(
                 '/TemplatesService.Templates/DeleteTemplate',
                 request_serializer=templates__pb2.IdStruct.SerializeToString,
                 response_deserializer=templates__pb2.Empty.FromString,
                 _registered_method=True)
-        self.DeleteLink = channel.unary_unary(
-                '/TemplatesService.Templates/DeleteLink',
-                request_serializer=templates__pb2.FeatureLinkTemplateStruct.SerializeToString,
+        self.CreateFeature = channel.unary_unary(
+                '/TemplatesService.Templates/CreateFeature',
+                request_serializer=templates__pb2.FeatureStruct.SerializeToString,
+                response_deserializer=templates__pb2.IdStruct.FromString,
+                _registered_method=True)
+        self.UpdateFeature = channel.unary_unary(
+                '/TemplatesService.Templates/UpdateFeature',
+                request_serializer=templates__pb2.FeatureStruct.SerializeToString,
+                response_deserializer=templates__pb2.Empty.FromString,
+                _registered_method=True)
+        self.DeleteFeature = channel.unary_unary(
+                '/TemplatesService.Templates/DeleteFeature',
+                request_serializer=templates__pb2.IdStruct.SerializeToString,
                 response_deserializer=templates__pb2.Empty.FromString,
                 _registered_method=True)
         self.GetAllTemplates = channel.unary_unary(
@@ -80,7 +95,14 @@ class TemplatesServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def CreateLink(self, request, context):
-        """Создание связи между фичами и шаблонами
+        """Создание связи между фичами и шаблонами   
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def DeleteLink(self, request, context):
+        """Удаление связи между таблицами
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -93,8 +115,9 @@ class TemplatesServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def CreateFeature(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+    def UpdateTemplate(self, request, context):
+        """Редактирование шаблона
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -106,8 +129,22 @@ class TemplatesServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def DeleteLink(self, request, context):
-        """Удаление связи между таблицами
+    def CreateFeature(self, request, context):
+        """Создание фичи
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def UpdateFeature(self, request, context):
+        """Редактирование фичи
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def DeleteFeature(self, request, context):
+        """Удаление фичи
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -121,7 +158,8 @@ class TemplatesServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def GetFeaturesByTemplateId(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """Получение фичи по айди шаблона
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -134,24 +172,39 @@ def add_TemplatesServicer_to_server(servicer, server):
                     request_deserializer=templates__pb2.FeatureLinkTemplateStruct.FromString,
                     response_serializer=templates__pb2.IdStruct.SerializeToString,
             ),
+            'DeleteLink': grpc.unary_unary_rpc_method_handler(
+                    servicer.DeleteLink,
+                    request_deserializer=templates__pb2.FeatureLinkTemplateStruct.FromString,
+                    response_serializer=templates__pb2.Empty.SerializeToString,
+            ),
             'CreateTemplate': grpc.unary_unary_rpc_method_handler(
                     servicer.CreateTemplate,
                     request_deserializer=templates__pb2.TemplateStruct.FromString,
                     response_serializer=templates__pb2.IdStruct.SerializeToString,
             ),
-            'CreateFeature': grpc.unary_unary_rpc_method_handler(
-                    servicer.CreateFeature,
-                    request_deserializer=templates__pb2.FeatureStruct.FromString,
-                    response_serializer=templates__pb2.IdStruct.SerializeToString,
+            'UpdateTemplate': grpc.unary_unary_rpc_method_handler(
+                    servicer.UpdateTemplate,
+                    request_deserializer=templates__pb2.TemplateStruct.FromString,
+                    response_serializer=templates__pb2.Empty.SerializeToString,
             ),
             'DeleteTemplate': grpc.unary_unary_rpc_method_handler(
                     servicer.DeleteTemplate,
                     request_deserializer=templates__pb2.IdStruct.FromString,
                     response_serializer=templates__pb2.Empty.SerializeToString,
             ),
-            'DeleteLink': grpc.unary_unary_rpc_method_handler(
-                    servicer.DeleteLink,
-                    request_deserializer=templates__pb2.FeatureLinkTemplateStruct.FromString,
+            'CreateFeature': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreateFeature,
+                    request_deserializer=templates__pb2.FeatureStruct.FromString,
+                    response_serializer=templates__pb2.IdStruct.SerializeToString,
+            ),
+            'UpdateFeature': grpc.unary_unary_rpc_method_handler(
+                    servicer.UpdateFeature,
+                    request_deserializer=templates__pb2.FeatureStruct.FromString,
+                    response_serializer=templates__pb2.Empty.SerializeToString,
+            ),
+            'DeleteFeature': grpc.unary_unary_rpc_method_handler(
+                    servicer.DeleteFeature,
+                    request_deserializer=templates__pb2.IdStruct.FromString,
                     response_serializer=templates__pb2.Empty.SerializeToString,
             ),
             'GetAllTemplates': grpc.unary_unary_rpc_method_handler(
@@ -203,6 +256,33 @@ class Templates(object):
             _registered_method=True)
 
     @staticmethod
+    def DeleteLink(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/TemplatesService.Templates/DeleteLink',
+            templates__pb2.FeatureLinkTemplateStruct.SerializeToString,
+            templates__pb2.Empty.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
     def CreateTemplate(request,
             target,
             options=(),
@@ -230,7 +310,7 @@ class Templates(object):
             _registered_method=True)
 
     @staticmethod
-    def CreateFeature(request,
+    def UpdateTemplate(request,
             target,
             options=(),
             channel_credentials=None,
@@ -243,9 +323,9 @@ class Templates(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/TemplatesService.Templates/CreateFeature',
-            templates__pb2.FeatureStruct.SerializeToString,
-            templates__pb2.IdStruct.FromString,
+            '/TemplatesService.Templates/UpdateTemplate',
+            templates__pb2.TemplateStruct.SerializeToString,
+            templates__pb2.Empty.FromString,
             options,
             channel_credentials,
             insecure,
@@ -284,7 +364,7 @@ class Templates(object):
             _registered_method=True)
 
     @staticmethod
-    def DeleteLink(request,
+    def CreateFeature(request,
             target,
             options=(),
             channel_credentials=None,
@@ -297,8 +377,62 @@ class Templates(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/TemplatesService.Templates/DeleteLink',
-            templates__pb2.FeatureLinkTemplateStruct.SerializeToString,
+            '/TemplatesService.Templates/CreateFeature',
+            templates__pb2.FeatureStruct.SerializeToString,
+            templates__pb2.IdStruct.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def UpdateFeature(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/TemplatesService.Templates/UpdateFeature',
+            templates__pb2.FeatureStruct.SerializeToString,
+            templates__pb2.Empty.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def DeleteFeature(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/TemplatesService.Templates/DeleteFeature',
+            templates__pb2.IdStruct.SerializeToString,
             templates__pb2.Empty.FromString,
             options,
             channel_credentials,
