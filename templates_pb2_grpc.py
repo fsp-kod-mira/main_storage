@@ -49,6 +49,11 @@ class TemplatesStub(object):
                 request_serializer=templates__pb2.TemplateStruct.SerializeToString,
                 response_deserializer=templates__pb2.IdStruct.FromString,
                 _registered_method=True)
+        self.CreateFeature = channel.unary_unary(
+                '/TemplatesService.Templates/CreateFeature',
+                request_serializer=templates__pb2.FeatureStruct.SerializeToString,
+                response_deserializer=templates__pb2.IdStruct.FromString,
+                _registered_method=True)
         self.DeleteTemplate = channel.unary_unary(
                 '/TemplatesService.Templates/DeleteTemplate',
                 request_serializer=templates__pb2.IdStruct.SerializeToString,
@@ -84,6 +89,12 @@ class TemplatesServicer(object):
     def CreateTemplate(self, request, context):
         """Создание нового шаблона
         """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CreateFeature(self, request, context):
+        """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -126,6 +137,11 @@ def add_TemplatesServicer_to_server(servicer, server):
             'CreateTemplate': grpc.unary_unary_rpc_method_handler(
                     servicer.CreateTemplate,
                     request_deserializer=templates__pb2.TemplateStruct.FromString,
+                    response_serializer=templates__pb2.IdStruct.SerializeToString,
+            ),
+            'CreateFeature': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreateFeature,
+                    request_deserializer=templates__pb2.FeatureStruct.FromString,
                     response_serializer=templates__pb2.IdStruct.SerializeToString,
             ),
             'DeleteTemplate': grpc.unary_unary_rpc_method_handler(
@@ -202,6 +218,33 @@ class Templates(object):
             target,
             '/TemplatesService.Templates/CreateTemplate',
             templates__pb2.TemplateStruct.SerializeToString,
+            templates__pb2.IdStruct.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def CreateFeature(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/TemplatesService.Templates/CreateFeature',
+            templates__pb2.FeatureStruct.SerializeToString,
             templates__pb2.IdStruct.FromString,
             options,
             channel_credentials,

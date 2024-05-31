@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0ftemplates.proto\x12\x10TemplatesService\"\x07\n\x05\x45mpty\"D\n\x19\x46\x65\x61tureLinkTemplateStruct\x12\x12\n\nfeature_id\x18\x01 \x01(\x04\x12\x13\n\x0btemplate_id\x18\x02 \x01(\x04\"?\n\x0eTemplateStruct\x12\n\n\x02id\x18\x01 \x01(\x04\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\"@\n\rTemplatesList\x12/\n\x05items\x18\x01 \x03(\x0b\x32 .TemplatesService.TemplateStruct\">\n\rFeatureStruct\x12\n\n\x02id\x18\x01 \x01(\x04\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x13\n\x0bpriority_id\x18\x03 \x01(\x04\">\n\x0c\x46\x65\x61turesList\x12.\n\x05items\x18\x01 \x03(\x0b\x32\x1f.TemplatesService.FeatureStruct\"\x16\n\x08IdStruct\x12\n\n\x02id\x18\x01 \x01(\x04\x32\xf1\x03\n\tTemplates\x12U\n\nCreateLink\x12+.TemplatesService.FeatureLinkTemplateStruct\x1a\x1a.TemplatesService.IdStruct\x12N\n\x0e\x43reateTemplate\x12 .TemplatesService.TemplateStruct\x1a\x1a.TemplatesService.IdStruct\x12\x45\n\x0e\x44\x65leteTemplate\x12\x1a.TemplatesService.IdStruct\x1a\x17.TemplatesService.Empty\x12R\n\nDeleteLink\x12+.TemplatesService.FeatureLinkTemplateStruct\x1a\x17.TemplatesService.Empty\x12K\n\x0fGetAllTemplates\x12\x17.TemplatesService.Empty\x1a\x1f.TemplatesService.TemplatesList\x12U\n\x17GetFeaturesByTemplateId\x12\x1a.TemplatesService.IdStruct\x1a\x1e.TemplatesService.FeaturesListb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0ftemplates.proto\x12\x10TemplatesService\"\x07\n\x05\x45mpty\"D\n\x19\x46\x65\x61tureLinkTemplateStruct\x12\x12\n\nfeature_id\x18\x01 \x01(\x04\x12\x13\n\x0btemplate_id\x18\x02 \x01(\x04\"?\n\x0eTemplateStruct\x12\n\n\x02id\x18\x01 \x01(\x04\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\"@\n\rTemplatesList\x12/\n\x05items\x18\x01 \x03(\x0b\x32 .TemplatesService.TemplateStruct\")\n\rFeatureStruct\x12\n\n\x02id\x18\x01 \x01(\x04\x12\x0c\n\x04name\x18\x02 \x01(\t\">\n\x0c\x46\x65\x61turesList\x12.\n\x05items\x18\x01 \x03(\x0b\x32\x1f.TemplatesService.FeatureStruct\"\x16\n\x08IdStruct\x12\n\n\x02id\x18\x01 \x01(\x04\x32\xbf\x04\n\tTemplates\x12U\n\nCreateLink\x12+.TemplatesService.FeatureLinkTemplateStruct\x1a\x1a.TemplatesService.IdStruct\x12N\n\x0e\x43reateTemplate\x12 .TemplatesService.TemplateStruct\x1a\x1a.TemplatesService.IdStruct\x12L\n\rCreateFeature\x12\x1f.TemplatesService.FeatureStruct\x1a\x1a.TemplatesService.IdStruct\x12\x45\n\x0e\x44\x65leteTemplate\x12\x1a.TemplatesService.IdStruct\x1a\x17.TemplatesService.Empty\x12R\n\nDeleteLink\x12+.TemplatesService.FeatureLinkTemplateStruct\x1a\x17.TemplatesService.Empty\x12K\n\x0fGetAllTemplates\x12\x17.TemplatesService.Empty\x1a\x1f.TemplatesService.TemplatesList\x12U\n\x17GetFeaturesByTemplateId\x12\x1a.TemplatesService.IdStruct\x1a\x1e.TemplatesService.FeaturesListb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -30,11 +30,11 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_TEMPLATESLIST']._serialized_start=181
   _globals['_TEMPLATESLIST']._serialized_end=245
   _globals['_FEATURESTRUCT']._serialized_start=247
-  _globals['_FEATURESTRUCT']._serialized_end=309
-  _globals['_FEATURESLIST']._serialized_start=311
-  _globals['_FEATURESLIST']._serialized_end=373
-  _globals['_IDSTRUCT']._serialized_start=375
-  _globals['_IDSTRUCT']._serialized_end=397
-  _globals['_TEMPLATES']._serialized_start=400
-  _globals['_TEMPLATES']._serialized_end=897
+  _globals['_FEATURESTRUCT']._serialized_end=288
+  _globals['_FEATURESLIST']._serialized_start=290
+  _globals['_FEATURESLIST']._serialized_end=352
+  _globals['_IDSTRUCT']._serialized_start=354
+  _globals['_IDSTRUCT']._serialized_end=376
+  _globals['_TEMPLATES']._serialized_start=379
+  _globals['_TEMPLATES']._serialized_end=954
 # @@protoc_insertion_point(module_scope)

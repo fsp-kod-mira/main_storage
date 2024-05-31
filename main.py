@@ -68,7 +68,7 @@ class TemplatesServicer(templates_pb2_grpc.TemplatesServicer):
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(str(e))
             return templates_pb2.TemplatesList()
-            
+
 
     def GetFeaturesByTemplateId(self, request, context):
         """
