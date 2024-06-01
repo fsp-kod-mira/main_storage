@@ -4,18 +4,22 @@ services:
   templates:
     build: .
     ports:
-      - "50051:50051"
+      - "5255:5255"
+    environment:
+      WAIT_HOSTS: templates-postgres:5432
+      GRPC_IPPORT: '0.0.0.0:5255'
+      PSQL_URL: 'postgresql://postgres:postgres@templates-postgres:5432/fichi'
   
   templates-postgres:
     image: postgres:13.14-alpine3.19
     restart: always
     volumes:
-      - template-pgdata:/var/lib/postgresql/data
+      - templates-pgdata:/var/lib/postgresql/data
     env_file:
       - .env.pg
     environment:
       - PSQL_URL='postgresql://postgres:postgres@localhost:5432/fichi'
     ports:
-      - "5437:5432"
+      - "5439:5432"
 volumes:
   templates-pgdata:
