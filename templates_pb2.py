@@ -14,27 +14,34 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0ftemplates.proto\x12\x10TemplatesService\"\x07\n\x05\x45mpty\"D\n\x19\x46\x65\x61tureLinkTemplateStruct\x12\x12\n\nfeature_id\x18\x01 \x01(\x04\x12\x13\n\x0btemplate_id\x18\x02 \x01(\x04\"?\n\x0eTemplateStruct\x12\n\n\x02id\x18\x01 \x01(\x04\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\"@\n\rTemplatesList\x12/\n\x05items\x18\x01 \x03(\x0b\x32 .TemplatesService.TemplateStruct\")\n\rFeatureStruct\x12\n\n\x02id\x18\x01 \x01(\x04\x12\x0c\n\x04name\x18\x02 \x01(\t\">\n\x0c\x46\x65\x61turesList\x12.\n\x05items\x18\x01 \x03(\x0b\x32\x1f.TemplatesService.FeatureStruct\"\x16\n\x08IdStruct\x12\n\n\x02id\x18\x01 \x01(\x04\x32\x9d\x06\n\tTemplates\x12U\n\nCreateLink\x12+.TemplatesService.FeatureLinkTemplateStruct\x1a\x1a.TemplatesService.IdStruct\x12R\n\nDeleteLink\x12+.TemplatesService.FeatureLinkTemplateStruct\x1a\x17.TemplatesService.Empty\x12N\n\x0e\x43reateTemplate\x12 .TemplatesService.TemplateStruct\x1a\x1a.TemplatesService.IdStruct\x12K\n\x0eUpdateTemplate\x12 .TemplatesService.TemplateStruct\x1a\x17.TemplatesService.Empty\x12\x45\n\x0e\x44\x65leteTemplate\x12\x1a.TemplatesService.IdStruct\x1a\x17.TemplatesService.Empty\x12L\n\rCreateFeature\x12\x1f.TemplatesService.FeatureStruct\x1a\x1a.TemplatesService.IdStruct\x12I\n\rUpdateFeature\x12\x1f.TemplatesService.FeatureStruct\x1a\x17.TemplatesService.Empty\x12\x44\n\rDeleteFeature\x12\x1a.TemplatesService.IdStruct\x1a\x17.TemplatesService.Empty\x12K\n\x0fGetAllTemplates\x12\x17.TemplatesService.Empty\x1a\x1f.TemplatesService.TemplatesList\x12U\n\x17GetFeaturesByTemplateId\x12\x1a.TemplatesService.IdStruct\x1a\x1e.TemplatesService.FeaturesListb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0ftemplates.proto\x12\x10TemplatesService\"\x07\n\x05\x45mpty\"_\n\x19\x46\x65\x61tureLinkTemplateStruct\x12\n\n\x02id\x18\x01 \x01(\x04\x12\x12\n\nfeature_id\x18\x02 \x01(\x04\x12\x13\n\x0btemplate_id\x18\x03 \x01(\x04\x12\r\n\x05value\x18\x04 \x01(\t\"?\n\x0eTemplateStruct\x12\n\n\x02id\x18\x01 \x01(\x04\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\"@\n\rTemplatesList\x12/\n\x05items\x18\x01 \x03(\x0b\x32 .TemplatesService.TemplateStruct\"\x90\x01\n\rFeatureStruct\x12\n\n\x02id\x18\x01 \x01(\x04\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x41\n\x0c\x66\x65\x61ture_type\x18\x03 \x01(\x0e\x32+.TemplatesService.FeatureStruct.FeatureType\"\"\n\x0b\x46\x65\x61tureType\x12\t\n\x05RANGE\x10\x00\x12\x08\n\x04LIST\x10\x01\">\n\x0c\x46\x65\x61turesList\x12.\n\x05items\x18\x01 \x03(\x0b\x32\x1f.TemplatesService.FeatureStruct\"\x16\n\x08IdStruct\x12\n\n\x02id\x18\x01 \x01(\x04\"\x82\x01\n\x13\x46\x65\x61tureLinkTemplate\x12\x39\n\x04link\x18\x01 \x01(\x0b\x32+.TemplatesService.FeatureLinkTemplateStruct\x12\x30\n\x07\x66\x65\x61ture\x18\x02 \x01(\x0b\x32\x1f.TemplatesService.FeatureStruct\"U\n\x1dHibridFeatureLinkTemplateList\x12\x34\n\x05items\x18\x01 \x03(\x0b\x32%.TemplatesService.FeatureLinkTemplate2\x82\x07\n\tTemplates\x12U\n\nCreateLink\x12+.TemplatesService.FeatureLinkTemplateStruct\x1a\x1a.TemplatesService.IdStruct\x12R\n\nUpdateLink\x12+.TemplatesService.FeatureLinkTemplateStruct\x1a\x17.TemplatesService.Empty\x12R\n\nDeleteLink\x12+.TemplatesService.FeatureLinkTemplateStruct\x1a\x17.TemplatesService.Empty\x12N\n\x0e\x43reateTemplate\x12 .TemplatesService.TemplateStruct\x1a\x1a.TemplatesService.IdStruct\x12K\n\x0eUpdateTemplate\x12 .TemplatesService.TemplateStruct\x1a\x17.TemplatesService.Empty\x12\x45\n\x0e\x44\x65leteTemplate\x12\x1a.TemplatesService.IdStruct\x1a\x17.TemplatesService.Empty\x12L\n\rCreateFeature\x12\x1f.TemplatesService.FeatureStruct\x1a\x1a.TemplatesService.IdStruct\x12I\n\rUpdateFeature\x12\x1f.TemplatesService.FeatureStruct\x1a\x17.TemplatesService.Empty\x12\x44\n\rDeleteFeature\x12\x1a.TemplatesService.IdStruct\x1a\x17.TemplatesService.Empty\x12K\n\x0fGetAllTemplates\x12\x17.TemplatesService.Empty\x1a\x1f.TemplatesService.TemplatesList\x12\x66\n\x17GetFeaturesByTemplateId\x12\x1a.TemplatesService.IdStruct\x1a/.TemplatesService.HibridFeatureLinkTemplateListB\x0fZ\rapi/templatesb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'templates_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
-  DESCRIPTOR._loaded_options = None
+  _globals['DESCRIPTOR']._loaded_options = None
+  _globals['DESCRIPTOR']._serialized_options = b'Z\rapi/templates'
   _globals['_EMPTY']._serialized_start=37
   _globals['_EMPTY']._serialized_end=44
   _globals['_FEATURELINKTEMPLATESTRUCT']._serialized_start=46
-  _globals['_FEATURELINKTEMPLATESTRUCT']._serialized_end=114
-  _globals['_TEMPLATESTRUCT']._serialized_start=116
-  _globals['_TEMPLATESTRUCT']._serialized_end=179
-  _globals['_TEMPLATESLIST']._serialized_start=181
-  _globals['_TEMPLATESLIST']._serialized_end=245
-  _globals['_FEATURESTRUCT']._serialized_start=247
-  _globals['_FEATURESTRUCT']._serialized_end=288
-  _globals['_FEATURESLIST']._serialized_start=290
-  _globals['_FEATURESLIST']._serialized_end=352
-  _globals['_IDSTRUCT']._serialized_start=354
-  _globals['_IDSTRUCT']._serialized_end=376
-  _globals['_TEMPLATES']._serialized_start=379
-  _globals['_TEMPLATES']._serialized_end=1176
+  _globals['_FEATURELINKTEMPLATESTRUCT']._serialized_end=141
+  _globals['_TEMPLATESTRUCT']._serialized_start=143
+  _globals['_TEMPLATESTRUCT']._serialized_end=206
+  _globals['_TEMPLATESLIST']._serialized_start=208
+  _globals['_TEMPLATESLIST']._serialized_end=272
+  _globals['_FEATURESTRUCT']._serialized_start=275
+  _globals['_FEATURESTRUCT']._serialized_end=419
+  _globals['_FEATURESTRUCT_FEATURETYPE']._serialized_start=385
+  _globals['_FEATURESTRUCT_FEATURETYPE']._serialized_end=419
+  _globals['_FEATURESLIST']._serialized_start=421
+  _globals['_FEATURESLIST']._serialized_end=483
+  _globals['_IDSTRUCT']._serialized_start=485
+  _globals['_IDSTRUCT']._serialized_end=507
+  _globals['_FEATURELINKTEMPLATE']._serialized_start=510
+  _globals['_FEATURELINKTEMPLATE']._serialized_end=640
+  _globals['_HIBRIDFEATURELINKTEMPLATELIST']._serialized_start=642
+  _globals['_HIBRIDFEATURELINKTEMPLATELIST']._serialized_end=727
+  _globals['_TEMPLATES']._serialized_start=730
+  _globals['_TEMPLATES']._serialized_end=1628
 # @@protoc_insertion_point(module_scope)

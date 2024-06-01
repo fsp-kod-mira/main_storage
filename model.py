@@ -1,14 +1,28 @@
-from sqlalchemy import create_engine, Column, Integer, String, Float, ForeignKey
+from sqlalchemy import create_engine, Column, Integer, Text, String, Float, ForeignKey
 from sqlalchemy.orm import relationship, declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy.exc import IntegrityError
+from enum import Enum as PyEnum
+from sqlalchemy import Enum as SQLEnum
+import logging
 import os
 
-psql_conn_url = os.getenv('PSQL_URL') or 'postgresql://nlclover:rootNodeJS1243@localhost:5432/fichi'
+
+
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
+
+psql_conn_url = os.getenv('PSQL_URL') or 'postgresql://postgres:postgres@localhost:5432/fichi'
 
 
 Base = declarative_base()
 engine = create_engine(psql_conn_url)
+
+
+import enum
+
+
 
 
 
@@ -18,11 +32,9 @@ class Feature(Base):
     Представляет собой функциональность с приоритетом и связана с несколькими шаблонами.
     """
     __tablename__ = 'features'
-
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(255), nullable=False, unique=True)   
-
-    # Отношение многие-ко-многим с таблицей Template через таблицу FeaturesTemplates
+    feature_type = Column(Integer, nullable=False)
     templates = relationship("FeaturesTemplates", back_populates="feature")
 
 
@@ -32,26 +44,23 @@ class Template(Base):
     Представляет собой шаблон с описанием и связан с несколькими функциональностями.
     """
     __tablename__ = 'templates'
-
     id = Column(Integer, primary_key=True, autoincrement=True)  
     name = Column(String(255), nullable=False)                
     description = Column(String(255))                         
-
-    # Отношение многие-ко-многим с таблицей Feature через таблицу FeaturesTemplates
     features = relationship("FeaturesTemplates", back_populates="template")
 
 
-
+## ссылки
 class FeaturesTemplates(Base):
     """
     Модель таблицы features_templates.
     Связывает таблицы Feature и Template для реализации отношения многие-ко-многим.
     """
     __tablename__ = 'features_templates'
-
     id = Column(Integer, primary_key=True, autoincrement=True) 
     feature_id = Column(Integer, ForeignKey('features.id'), nullable=False)
     template_id = Column(Integer, ForeignKey('templates.id'), nullable=False) 
+    value = Column(Text)
 
     # Отношение многие-к-одному с таблицей Feature
     feature = relationship("Feature", back_populates="templates")
@@ -92,23 +101,20 @@ class ModelException(Exception):
 
 
 
+#========================================================================================================================
+#                       Реализация интерфейса
+#========================================================================================================================
 
 
 
-
-
-
-
-
-
-
-def CreateFeature(name):
+def CreateFeature(name, feature_type):
     """
     Добавление новой фичи
     """
     with GetSession() as session:
         try:
-            feature = Feature(name=name)
+            
+            feature = Feature(name=name, feature_type=feature_type)
             session.add(feature)
             session.commit()
             return feature.id
@@ -118,7 +124,7 @@ def CreateFeature(name):
 
 
 
-def UpdateFeature(feature_id, name):
+def UpdateFeature(feature_id, name, feature_type):
     """
     Обновление фичи
     """
@@ -126,11 +132,13 @@ def UpdateFeature(feature_id, name):
         try:
             feature = session.query(Feature).filter(Feature.id == feature_id).first()
             feature.name = name
+            feature.feature_type = feature_type
             session.commit()
             return True
         except IntegrityError:
             session.rollback()
             return False
+
 
 
 def DeleteFeature(feature_id):
@@ -147,11 +155,12 @@ def DeleteFeature(feature_id):
 
 
 #========================================================================================================================
+#                       Links
+#========================================================================================================================
 
 
 
-
-def AddFeatureTemplateLink(feature_id, template_id):
+def AddTemplateFeatureLink(feature_id, template_id, value):
     """
     Добавляет связь между функциональностью и шаблоном в базу данных и возвращает id новой записи.
     """
@@ -160,9 +169,8 @@ def AddFeatureTemplateLink(feature_id, template_id):
         if res:
             print(f"Запись уже имеется, скипаем feature_id: {feature_id}, template_id: {template_id}")
             return
-
         try:
-            feature_template = FeaturesTemplates(feature_id=feature_id, template_id=template_id)
+            feature_template = FeaturesTemplates(feature_id=feature_id, template_id=template_id, value=value)
             session.add(feature_template)
             session.commit()
             return feature_template.id
@@ -172,7 +180,7 @@ def AddFeatureTemplateLink(feature_id, template_id):
 
 
 
-def UpdateTemplateFeaturesLink(link_id, template_id, feature_id):
+def UpdateTemplateFeaturesLink(link_id, template_id, feature_id, value):
     """
     Обновление связи между шаблоном и фичей
     """
@@ -181,33 +189,14 @@ def UpdateTemplateFeaturesLink(link_id, template_id, feature_id):
         if res:
             res.template_id = template_id
             res.feature_id = feature_id
+            res.value = value
             session.commit()
         else:
             raise ModelException("Не найдена структура")
 
 
-def GetFeaturesByTemplateId(template_id):
-    """
-    Получение всех функциональностей по идентификатору шаблона.
-    """
-    features_dicts = []
-    with GetSession() as session:
-        
-        links = session.query(FeaturesTemplates).filter(FeaturesTemplates.template_id == template_id).all()
-        
-        for link in links:
-            feature = session.query(Feature).filter(Feature.id == link.feature_id).first()
-            if feature:
-                feature_dict = {
-                    "id": feature.id,
-                    "name": feature.name,
-                }
-                features_dicts.append(feature_dict)
-        return features_dicts
 
-
-
-def DeleteFeatureTemplateLink(feature_id, template_id):
+def DeleteTemplateFeatureLink(feature_id, template_id):
     """
     Удаляет связь меду функциональностью и шаблоном в базе данных
     """
@@ -225,7 +214,47 @@ def DeleteFeatureTemplateLink(feature_id, template_id):
 
 
 #========================================================================================================================
+#                   Получение различных данных
+#========================================================================================================================
 
+
+
+
+def GetFeaturesByTemplateId(template_id):
+    """
+    Получение всех функциональностей по идентификатору шаблона.
+    """
+    features_dicts = []
+    with GetSession() as session:
+        # получаем какие ссылки
+        links = session.query(FeaturesTemplates).filter(FeaturesTemplates.template_id == template_id).all()
+        
+        for link in links:
+            feature = session.query(Feature).filter(Feature.id == link.feature_id).first()
+            if feature:
+                feature_dict = {
+                    "id": feature.id,
+                    "name": feature.name,
+                    "feature_type": feature.feature_type,
+                    "link":{
+                        "id": link.id,
+                        "feature_id": link.feature_id, 
+                        "template_id": link.template_id,
+                        "value": link.value
+                    }
+                }
+                features_dicts.append(feature_dict)
+        return features_dicts
+
+
+
+
+
+
+
+#========================================================================================================================
+#                       Templates
+#========================================================================================================================
 
 
 
@@ -259,6 +288,8 @@ def UpdateTemplate(name, description, template_id):
         else:
             raise ModelException("Не найдена структура")
 
+
+
 def DeleteTemplate(template_id):
     """
     Удаляет шаблон
@@ -270,7 +301,7 @@ def DeleteTemplate(template_id):
             session.commit()
         else:
             raise ModelException("Не найдена структура")
-        
+
 
 
 def GetAllTemplates():
@@ -288,6 +319,7 @@ def GetAllTemplates():
             }
             templates.append(template_dict)
         return templates
+
 
 
 

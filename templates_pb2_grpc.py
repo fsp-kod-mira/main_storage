@@ -44,6 +44,11 @@ class TemplatesStub(object):
                 request_serializer=templates__pb2.FeatureLinkTemplateStruct.SerializeToString,
                 response_deserializer=templates__pb2.IdStruct.FromString,
                 _registered_method=True)
+        self.UpdateLink = channel.unary_unary(
+                '/TemplatesService.Templates/UpdateLink',
+                request_serializer=templates__pb2.FeatureLinkTemplateStruct.SerializeToString,
+                response_deserializer=templates__pb2.Empty.FromString,
+                _registered_method=True)
         self.DeleteLink = channel.unary_unary(
                 '/TemplatesService.Templates/DeleteLink',
                 request_serializer=templates__pb2.FeatureLinkTemplateStruct.SerializeToString,
@@ -87,7 +92,7 @@ class TemplatesStub(object):
         self.GetFeaturesByTemplateId = channel.unary_unary(
                 '/TemplatesService.Templates/GetFeaturesByTemplateId',
                 request_serializer=templates__pb2.IdStruct.SerializeToString,
-                response_deserializer=templates__pb2.FeaturesList.FromString,
+                response_deserializer=templates__pb2.HibridFeatureLinkTemplateList.FromString,
                 _registered_method=True)
 
 
@@ -95,70 +100,77 @@ class TemplatesServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def CreateLink(self, request, context):
-        """Создание связи между фичами и шаблонами   
+        """Создание связи между фичами и шаблонами +
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def UpdateLink(self, request, context):
+        """Редактирование связи между таблицами
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def DeleteLink(self, request, context):
-        """Удаление связи между таблицами
+        """Удаление связи между таблицами +
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def CreateTemplate(self, request, context):
-        """Создание нового шаблона
+        """Создание нового шаблона +
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def UpdateTemplate(self, request, context):
-        """Редактирование шаблона
+        """Редактирование шаблона +
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def DeleteTemplate(self, request, context):
-        """Удаление шаблона по id
+        """Удаление шаблона по id +
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def CreateFeature(self, request, context):
-        """Создание фичи
+        """Создание фичи +
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def UpdateFeature(self, request, context):
-        """Редактирование фичи
+        """Редактирование фичи +
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def DeleteFeature(self, request, context):
-        """Удаление фичи
+        """Удаление фичи +
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def GetAllTemplates(self, request, context):
-        """Получение всех шаблонов
+        """Получение всех шаблонов +
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def GetFeaturesByTemplateId(self, request, context):
-        """Получение фичи по айди шаблона
+        """Получение фичи по айди шаблона +
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -171,6 +183,11 @@ def add_TemplatesServicer_to_server(servicer, server):
                     servicer.CreateLink,
                     request_deserializer=templates__pb2.FeatureLinkTemplateStruct.FromString,
                     response_serializer=templates__pb2.IdStruct.SerializeToString,
+            ),
+            'UpdateLink': grpc.unary_unary_rpc_method_handler(
+                    servicer.UpdateLink,
+                    request_deserializer=templates__pb2.FeatureLinkTemplateStruct.FromString,
+                    response_serializer=templates__pb2.Empty.SerializeToString,
             ),
             'DeleteLink': grpc.unary_unary_rpc_method_handler(
                     servicer.DeleteLink,
@@ -215,7 +232,7 @@ def add_TemplatesServicer_to_server(servicer, server):
             'GetFeaturesByTemplateId': grpc.unary_unary_rpc_method_handler(
                     servicer.GetFeaturesByTemplateId,
                     request_deserializer=templates__pb2.IdStruct.FromString,
-                    response_serializer=templates__pb2.FeaturesList.SerializeToString,
+                    response_serializer=templates__pb2.HibridFeatureLinkTemplateList.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -245,6 +262,33 @@ class Templates(object):
             '/TemplatesService.Templates/CreateLink',
             templates__pb2.FeatureLinkTemplateStruct.SerializeToString,
             templates__pb2.IdStruct.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def UpdateLink(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/TemplatesService.Templates/UpdateLink',
+            templates__pb2.FeatureLinkTemplateStruct.SerializeToString,
+            templates__pb2.Empty.FromString,
             options,
             channel_credentials,
             insecure,
@@ -487,7 +531,7 @@ class Templates(object):
             target,
             '/TemplatesService.Templates/GetFeaturesByTemplateId',
             templates__pb2.IdStruct.SerializeToString,
-            templates__pb2.FeaturesList.FromString,
+            templates__pb2.HibridFeatureLinkTemplateList.FromString,
             options,
             channel_credentials,
             insecure,

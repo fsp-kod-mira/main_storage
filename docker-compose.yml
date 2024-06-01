@@ -13,6 +13,8 @@ services:
       - template-pgdata:/var/lib/postgresql/data
     env_file:
       - .env.pg
+    environment:
+      - PSQL_URL='postgresql://postgres:postgres@localhost:5432/fichi'
     ports:
       - "5437:5432"
 volumes:
